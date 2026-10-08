@@ -1,0 +1,50 @@
+<VirtualHost *:8080>
+
+    ServerName localhost
+
+    ProxyPreserveHost On
+
+
+    <Proxy "balancer://status_backend">
+
+        BalancerMember "http://127.0.0.1:8001"
+        BalancerMember "http://127.0.0.1:8002"
+
+        ProxySet lbmethod=bybusyness
+
+   </Proxy>
+
+    ProxyPass        "/status/" "balancer://status_backend/"
+    ProxyPassReverse "/status/" "balancer://status_backend/"
+
+
+   
+
+    <Proxy "balancer://finance_backend">
+
+        BalancerMember "http://127.0.0.1:8003"
+        BalancerMember "http://127.0.0.1:8004"
+
+        ProxySet lbmethod=bybusyness
+
+    </Proxy>
+
+    ProxyPass        "/finance/" "balancer://finance_backend/"
+    ProxyPassReverse "/finance/" "balancer://finance_backend/"
+
+
+    
+
+    <Proxy "balancer://app3_backend">
+
+        BalancerMember "http://127.0.0.1:8005"
+        BalancerMember "http://127.0.0.1:8006"
+
+        ProxySet lbmethod=bybusyness
+
+    </Proxy>
+
+    ProxyPass        "/app3/" "balancer://app3_backend/"
+    ProxyPassReverse "/app3/" "balancer://app3_backend/"
+
+</VirtualHost>
